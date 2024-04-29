@@ -53,7 +53,7 @@ app.get("/collaborators", async (req: any, res: any) => {
   });
 });
 
-app.get("admin/updates", async (req: any, res: any) => {
+app.get("/admin/updates", async (req: any, res: any) => {
   const sql = "SELECT * FROM updates";
   dbAdminUpdates.query(sql, (err: any, data: any) => {
     if (err) return res.json(err);
@@ -61,7 +61,7 @@ app.get("admin/updates", async (req: any, res: any) => {
   });
 });
 
-app.get("admin/collaborators", async (req: any, res: any) => {
+app.get("/admin/collaborators", async (req: any, res: any) => {
   const sql = "SELECT * FROM collaborators";
   dbAdmibCollaborators.query(sql, (err: any, data: any) => {
     if (err) return res.json(err);
