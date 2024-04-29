@@ -3,9 +3,11 @@ const mysql = require("mysql");
 const cors = require("cors");
 
 const app = express();
-app.use(cors({
-  origin:"http://localhost:5173"
-}));
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+  })
+);
 
 const dbGuestUpdates = mysql.createConnection({
   host: process.env.DB_HOST,
@@ -91,15 +93,15 @@ app.post("/admin/updates", async (req: any, res: any) => {
   }
 
   const values = [
-    newData.title,
+    newData.title || "",
     newData.description || "",
-    newData.date,
-    newData.steam,
-    newData.epicgames,
-    newData.xbox,
-    newData.playstation,
-    newData.banner,
-    newData.url,
+    newData.date || "",
+    newData.steam || false,
+    newData.epicgames || false,
+    newData.xbox || false,
+    newData.playstation || false,
+    newData.banner || "",
+    newData.url || "",
   ];
 
   const sql = `INSERT INTO updates(title, description, date, steam, epicgames, xbox, playstation, banner, url ), VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
@@ -127,9 +129,9 @@ app.post("/admin/collaborators", async (req: any, res: any) => {
   }
 
   const values = [
-    newData.banner,
+    newData.banner || "",
     newData.title || "",
-    newData.participating !== "boolean",
+    newData.participating || false,
   ];
 
   const sql = `INSERT INTO collaborators(banner, title, participating), VALUES (?, ?, ?)`;
