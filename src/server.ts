@@ -3,14 +3,19 @@ const mysql = require("mysql");
 const cors = require("cors");
 
 const app = express();
+
+app.use(express.json());
+
 app.use(
   cors({
-    origin: "http://localhost:5173/post",
+    origin: true,
+    methods: ["GET", "POST"],
+    credentials: true,
   })
 );
 
 const dbGuestUpdates = mysql.createConnection({
-  host: process.env.DB_HOST,
+  host: "ns96.hostgator.com.br",
   user: process.env.DB_GUEST,
   password: process.env.DB_GUEST_PASSWORD,
   database: process.env.DB_UPDATES,
@@ -38,10 +43,7 @@ const dbAdminCollaborators = mysql.createConnection({
 });
 
 app.get("/", async (re: any, res: any) => {
-  const headers =
-    (res.header("Access-Control-Allow-Origin", "*"),
-    res.json("From backend side"));
-  return headers;
+  return res.json("From backend side");
 });
 
 app.get("/updates", async (req: any, res: any) => {
@@ -76,76 +78,53 @@ app.get("/admin/collaborators", async (req: any, res: any) => {
   });
 });
 
-app.post("/admin/updates", async (req: any, res: any) => {
-  // if (!req.isAdmin) {
-  //   return res.status(401).json({ message: "Not authorized" });
-  // }
-
+app.post("/admin/updates/post", async (req: any, res: any) => {
   const newData = req.body;
-  if (
-    !newData.title ||
-    !newData.date ||
-    !newData.url ||
-    newData.steam !== "boolean" ||
-    newData.epicgames !== "boolean" ||
-    newData.xbox !== "boolean" ||
-    newData.playstation !== "boolean" ||
-    !newData.banner
-  ) {
+  console.log(newData);
+
+  if (!newData || !newData.title || !newData.description || !newData.banner) {
     return res.status(400).json({ message: "Invalid data" });
   }
 
   const values = [
-    newData.title || "",
-    newData.description || "",
-    newData.date || "",
+    newData.title,
+    newData.description,
+    newData.date,
     newData.steam || false,
     newData.epicgames || false,
     newData.xbox || false,
     newData.playstation || false,
-    newData.banner || "",
+    newData.banner,
     newData.url || "",
   ];
 
-  const sql = `INSERT INTO updates(title, description, date, steam, epicgames, xbox, playstation, banner, url ), VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-  dbAdminUpdates.query(sql, values, (err: any, result: any) => {
+  const sql = `INSERT INTO updates(title, description, date, steam, epicgames, xbox, playstation, banner, url ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+  dbAdminUpdates.query(sql, values, (err: any) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ message: "Error inserting data" });
     }
-    return res.status(201).json({ message: "Update created successfully" });
   });
 });
 
-app.post("/admin/collaborators", async (req: any, res: any) => {
-  // if (!req.isAdmin) {
-  //   return res.status(401).json({ message: "Not authorized" });
-  // }
-
+app.post("/admin/collaborators/post", async (req: any, res: any) => {
   const newData = req.body;
-  if (
-    !newData.banner ||
-    !newData.title ||
-    newData.participating !== "boolean"
-  ) {
+  if (!newData.banner || !newData.title) {
     return res.status(400).json({ message: "Invalid data" });
   }
 
   const values = [
-    newData.banner || "",
-    newData.title || "",
+    newData.banner,
+    newData.title,
     newData.participating || false,
   ];
 
-  const sql = `INSERT INTO collaborators(banner, title, participating), VALUES (?, ?, ?)`;
-  dbAdminCollaborators.query(sql, values, (err: any, result: any) => {
+  const sql = `INSERT INTO collaborators(banner, title, participating) VALUES (?, ?, ?)`;
+  dbAdminCollaborators.query(sql, values, (err: any) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ message: "Error inserting data" });
     }
-    return res
-      .status(201)
-      .json({ message: "Collaborator created successfully" });
   });
 });
 
