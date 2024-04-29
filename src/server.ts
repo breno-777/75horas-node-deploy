@@ -38,7 +38,10 @@ const dbAdminCollaborators = mysql.createConnection({
 });
 
 app.get("/", async (re: any, res: any) => {
-  return res.json("From backend side");
+  const headers =
+    (res.header("Access-Control-Allow-Origin", "*"),
+    res.json("From backend side"));
+  return headers;
 });
 
 app.get("/updates", async (req: any, res: any) => {
