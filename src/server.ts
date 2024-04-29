@@ -5,7 +5,7 @@ const cors = require("cors");
 const app = express();
 app.use(
   cors({
-    origin: "*",
+    origin: "http://localhost:5173/post",
   })
 );
 
@@ -146,6 +146,6 @@ app.post("/admin/collaborators", async (req: any, res: any) => {
   });
 });
 
-app.listen(process.env.PORT, () => {
+app.listen(process.env.PORT || 8081, () => {
   console.log("listening");
 });
