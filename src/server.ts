@@ -26,7 +26,7 @@ const dbAdminUpdates = mysql.createConnection({
   database: process.env.DB_UPDATES,
 });
 
-const dbAdmibCollaborators = mysql.createConnection({
+const dbAdminCollaborators = mysql.createConnection({
   host: process.env.DB_HOST,
   user: process.env.DB_ADMIN,
   password: process.env.DB_ADMIN_PASSWORD,
@@ -63,9 +63,82 @@ app.get("/admin/updates", async (req: any, res: any) => {
 
 app.get("/admin/collaborators", async (req: any, res: any) => {
   const sql = "SELECT * FROM collaborators";
-  dbAdmibCollaborators.query(sql, (err: any, data: any) => {
+  dbAdminCollaborators.query(sql, (err: any, data: any) => {
     if (err) return res.json(err);
     return res.json(data);
+  });
+});
+
+app.post("/admin/updates", async (req: any, res: any) => {
+  // if (!req.isAdmin) {
+  //   return res.status(401).json({ message: "Not authorized" });
+  // }
+
+  const newData = req.body;
+  if (
+    !newData.title ||
+    !newData.date ||
+    !newData.url ||
+    newData.steam !== "boolean" ||
+    newData.epicgames !== "boolean" ||
+    newData.xbox !== "boolean" ||
+    newData.playstation !== "boolean" ||
+    !newData.banner
+  ) {
+    return res.status(400).json({ message: "Invalid data" });
+  }
+
+  const values = [
+    newData.title,
+    newData.description || "",
+    newData.date,
+    newData.steam,
+    newData.epicgames,
+    newData.xbox,
+    newData.playstation,
+    newData.banner,
+    newData.url,
+  ];
+
+  const sql = `INSERT INTO updates(title, description, date, steam, epicgames, xbox, playstation, banner, url ), VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+  dbAdminUpdates.query(sql, values, (err: any, result: any) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ message: "Error inserting data" });
+    }
+    return res.status(201).json({ message: "Update created successfully" });
+  });
+});
+
+app.post("/admin/collaborators", async (req: any, res: any) => {
+  // if (!req.isAdmin) {
+  //   return res.status(401).json({ message: "Not authorized" });
+  // }
+
+  const newData = req.body;
+  if (
+    !newData.banner ||
+    !newData.title ||
+    newData.participating !== "boolean"
+  ) {
+    return res.status(400).json({ message: "Invalid data" });
+  }
+
+  const values = [
+    newData.banner,
+    newData.title || "",
+    newData.participating !== "boolean",
+  ];
+
+  const sql = `INSERT INTO collaborators(banner, title, participating), VALUES (?, ?, ?)`;
+  dbAdminCollaborators.query(sql, values, (err: any, result: any) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ message: "Error inserting data" });
+    }
+    return res
+      .status(201)
+      .json({ message: "Collaborator created successfully" });
   });
 });
 
