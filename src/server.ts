@@ -3,7 +3,12 @@ const mysql = require("mysql");
 const cors = require("cors");
 
 const app = express();
-app.use(cors());
+
+const allowedOrigins = ["http://localhost:5173"];
+const options = {
+  origin: allowedOrigins,
+};
+app.use(cors(options));
 
 const dbGuestUpdates = mysql.createConnection({
   host: process.env.DB_HOST,
