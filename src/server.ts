@@ -5,11 +5,32 @@ const cors = require("cors");
 const app = express();
 app.use(cors());
 
-const db = mysql.createConnection({
+const dbGuestUpdates = mysql.createConnection({
   host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_DATABASE,
+  user: process.env.DB_GUEST,
+  password: process.env.DB_GUEST_PASSWORD,
+  database: process.env.DB_UPDATES,
+});
+
+const dbGuestCollaborators = mysql.createConnection({
+  host: process.env.DB_HOST,
+  user: process.env.DB_GUEST,
+  password: process.env.DB_GUEST_PASSWORD,
+  database: process.env.DB_COLLABORATORS,
+});
+
+const dbAdminUpdates = mysql.createConnection({
+  host: process.env.DB_HOST,
+  user: process.env.DB_ADMIN,
+  password: process.env.DB_ADMIN_PASSWORD,
+  database: process.env.DB_UPDATES,
+});
+
+const dbAdmibCollaborators = mysql.createConnection({
+  host: process.env.DB_HOST,
+  user: process.env.DB_ADMIN,
+  password: process.env.DB_ADMIN_PASSWORD,
+  database: process.env.DB_COLLABORATORS,
 });
 
 app.get("/", async (re: any, res: any) => {
@@ -18,7 +39,31 @@ app.get("/", async (re: any, res: any) => {
 
 app.get("/updates", async (req: any, res: any) => {
   const sql = "SELECT * FROM updates";
-  db.query(sql, (err: any, data: any) => {
+  dbGuestUpdates.query(sql, (err: any, data: any) => {
+    if (err) return res.json(err);
+    return res.json(data);
+  });
+});
+
+app.get("/collaborators", async (req: any, res: any) => {
+  const sql = "SELECT * FROM collaborators";
+  dbGuestCollaborators.query(sql, (err: any, data: any) => {
+    if (err) return res.json(err);
+    return res.json(data);
+  });
+});
+
+app.get("admin/updates", async (req: any, res: any) => {
+  const sql = "SELECT * FROM updates";
+  dbAdminUpdates.query(sql, (err: any, data: any) => {
+    if (err) return res.json(err);
+    return res.json(data);
+  });
+});
+
+app.get("admin/collaborators", async (req: any, res: any) => {
+  const sql = "SELECT * FROM collaborators";
+  dbAdmibCollaborators.query(sql, (err: any, data: any) => {
     if (err) return res.json(err);
     return res.json(data);
   });
