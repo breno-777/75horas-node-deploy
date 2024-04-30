@@ -8,7 +8,7 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: true,
+    origin: "http://localhost:5173",
     methods: ["GET", "POST"],
     credentials: true,
   })
@@ -146,6 +146,6 @@ app.delete("/admin/updates/delete", async (req: any, res: any) => {
   }
 });
 
-app.listen(process.env.PORT, () => {
+app.listen(process.env.PORT || 8081, () => {
   console.log("listening");
 });
