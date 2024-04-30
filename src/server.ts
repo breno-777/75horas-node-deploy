@@ -1,16 +1,18 @@
 const express = require("express");
 const mysql = require("mysql");
 const cors = require("cors");
+const bodyParser = require("body-parser");
 
 const app = express();
 
+app.use(bodyParser.json({ limit: "6mb" }));
+app.use(bodyParser.urlencoded({ limit: "6mb", extended: true }));
 app.use(express.json());
 
 const corsOptions = {
   origin: "*",
+  methods: ["GET", "POST", "DELETE"],
   credentials: true,
-  methods: "GET, POST, DELETE",
-  optionSuccessStatus: 200,
 };
 
 app.use(cors(corsOptions));
@@ -43,12 +45,12 @@ const dbAdminCollaborators = mysql.createConnection({
   database: process.env.DB_COLLABORATORS,
 });
 
-app.get("/", cors(), async (re: any, res: any) => {
+app.get("/", async (re: any, res: any) => {
   return res.json("From backend side");
 });
 
 // Get Updates from data table with guest
-app.get("/updates", cors(), async (req: any, res: any) => {
+app.get("/updates", async (req: any, res: any) => {
   const sql = "SELECT * FROM updates";
   dbGuestUpdates.query(sql, (err: any, data: any) => {
     if (err) return res.json(err);
@@ -57,7 +59,7 @@ app.get("/updates", cors(), async (req: any, res: any) => {
 });
 
 // Get Collaborators from data table with guest
-app.get("/collaborators", cors(), async (req: any, res: any) => {
+app.get("/collaborators", async (req: any, res: any) => {
   const sql = "SELECT * FROM collaborators";
   dbGuestCollaborators.query(sql, (err: any, data: any) => {
     if (err) return res.json(err);
@@ -66,7 +68,7 @@ app.get("/collaborators", cors(), async (req: any, res: any) => {
 });
 
 // Get Updates from data table with admin
-app.get("/admin/updates", cors(), async (req: any, res: any) => {
+app.get("/admin/updates", async (req: any, res: any) => {
   const sql = "SELECT * FROM updates";
   dbAdminUpdates.query(sql, (err: any, data: any) => {
     if (err) return res.json(err);
@@ -75,7 +77,7 @@ app.get("/admin/updates", cors(), async (req: any, res: any) => {
 });
 
 // Get Collaborators from data table with admin
-app.get("/admin/collaborators", cors(), async (req: any, res: any) => {
+app.get("/admin/collaborators", async (req: any, res: any) => {
   const sql = "SELECT * FROM collaborators";
   dbAdminCollaborators.query(sql, (err: any, data: any) => {
     if (err) return res.json(err);
@@ -180,31 +182,3 @@ app.delete(
 app.listen(process.env.PORT, () => {
   console.log("listening");
 });
-
-// const dbGuestUpdates = mysql.createConnection({
-//   host: "ns96.hostgator.com.br",
-//   user: "hg75ho41_guest",
-//   password: "sIqN27=L@eNq",
-//   database: "hg75ho41_updates",
-// });
-
-// const dbGuestCollaborators = mysql.createConnection({
-//   host: "ns96.hostgator.com.br",
-//   user: "hg75ho41_guest",
-//   password: "sIqN27=L@eNq",
-//   database: "hg75ho41_collaborators",
-// });
-
-// const dbAdminUpdates = mysql.createConnection({
-//   host: "ns96.hostgator.com.br",
-//   user: "hg75ho41_admin",
-//   password: "*t?çD[7?}1a#",
-//   database: "hg75ho41_updates",
-// });
-
-// const dbAdminCollaborators = mysql.createConnection({
-//   host: "ns96.hostgator.com.br",
-//   user: "hg75ho41_admin",
-//   password: "*t?çD[7?}1a#",
-//   database: "hg75ho41_collaborators",
-// });
