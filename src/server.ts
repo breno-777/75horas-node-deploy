@@ -9,13 +9,13 @@ app.use(express.json());
 app.use(
   cors({
     origin: "http://localhost:5173",
-    methods: ["GET", "POST"],
+    methods: ["GET", "POST", "DELETE"],
     credentials: true,
   })
 );
 
 const dbGuestUpdates = mysql.createConnection({
-  host: "ns96.hostgator.com.br",
+  host: process.env.DB_HOST,
   user: process.env.DB_GUEST,
   password: process.env.DB_GUEST_PASSWORD,
   database: process.env.DB_UPDATES,
@@ -78,7 +78,7 @@ app.get("/admin/collaborators", async (req: any, res: any) => {
   });
 });
 
-app.post("/admin/updates/post", async (req: any, res: any) => {
+app.post("/admin/updates/post", cors(), async (req: any, res: any) => {
   const newData = req.body;
   console.log(newData);
 
@@ -107,7 +107,7 @@ app.post("/admin/updates/post", async (req: any, res: any) => {
   });
 });
 
-app.post("/admin/collaborators/post", async (req: any, res: any) => {
+app.post("/admin/collaborators/post", cors(), async (req: any, res: any) => {
   const newData = req.body;
   if (!newData.banner || !newData.title) {
     return res.status(400).json({ message: "Invalid data" });
@@ -128,7 +128,7 @@ app.post("/admin/collaborators/post", async (req: any, res: any) => {
   });
 });
 
-app.delete("/admin/updates/delete", async (req: any, res: any) => {
+app.delete("/admin/updates/delete", cors(), async (req: any, res: any) => {
   const { id } = req.body;
   console.log(id);
 
