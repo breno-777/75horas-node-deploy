@@ -8,7 +8,7 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://75horas.com"],
+    origin: "*",
     methods: ["GET", "POST", "DELETE"],
     credentials: true,
   })
@@ -179,3 +179,31 @@ app.delete(
 app.listen(process.env.PORT, () => {
   console.log("listening");
 });
+
+// const dbGuestUpdates = mysql.createConnection({
+//   host: "ns96.hostgator.com.br",
+//   user: "hg75ho41_guest",
+//   password: "sIqN27=L@eNq",
+//   database: "hg75ho41_updates",
+// });
+
+// const dbGuestCollaborators = mysql.createConnection({
+//   host: "ns96.hostgator.com.br",
+//   user: "hg75ho41_guest",
+//   password: "sIqN27=L@eNq",
+//   database: "hg75ho41_collaborators",
+// });
+
+// const dbAdminUpdates = mysql.createConnection({
+//   host: "ns96.hostgator.com.br",
+//   user: "hg75ho41_admin",
+//   password: "*t?çD[7?}1a#",
+//   database: "hg75ho41_updates",
+// });
+
+// const dbAdminCollaborators = mysql.createConnection({
+//   host: "ns96.hostgator.com.br",
+//   user: "hg75ho41_admin",
+//   password: "*t?çD[7?}1a#",
+//   database: "hg75ho41_collaborators",
+// });
