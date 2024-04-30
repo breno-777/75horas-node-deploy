@@ -6,13 +6,14 @@ const app = express();
 
 app.use(express.json());
 
-app.use(
-  cors({
-    origin: "*",
-    methods: ["GET", "POST", "DELETE"],
-    credentials: true,
-  })
-);
+const corsOptions = {
+  origin: "*",
+  credentials: true,
+  methods: "GET, POST, DELETE",
+  optionSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
 
 const dbGuestUpdates = mysql.createConnection({
   host: process.env.DB_HOST,
