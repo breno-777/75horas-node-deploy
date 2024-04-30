@@ -128,6 +128,24 @@ app.post("/admin/collaborators/post", async (req: any, res: any) => {
   });
 });
 
-app.listen(process.env.PORT || 8081, () => {
+app.delete("/admin/updates/delete", async (req: any, res: any) => {
+  const { id } = req.body;
+  console.log(id);
+
+  if (!id) {
+    return res.status(400).json({ message: "Missing required field: id" });
+  }
+
+  try {
+    const sql = `DELETE from updates WHERE id = ?`;
+    await dbAdminUpdates.query(sql, [id]);
+    res.json({ message: "Update deleted successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error deleting update from data" });
+  }
+});
+
+app.listen(process.env.PORT, () => {
   console.log("listening");
 });
