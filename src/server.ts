@@ -8,7 +8,7 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: "*",
+    origin: ["http://localhost:5173", "https://75horas.com"],
     methods: ["GET", "POST", "DELETE"],
     credentials: true,
   })
@@ -46,6 +46,7 @@ app.get("/", async (re: any, res: any) => {
   return res.json("From backend side");
 });
 
+// Get Updates from data table with guest
 app.get("/updates", async (req: any, res: any) => {
   const sql = "SELECT * FROM updates";
   dbGuestUpdates.query(sql, (err: any, data: any) => {
@@ -54,6 +55,7 @@ app.get("/updates", async (req: any, res: any) => {
   });
 });
 
+// Get Collaborators from data table with guest
 app.get("/collaborators", async (req: any, res: any) => {
   const sql = "SELECT * FROM collaborators";
   dbGuestCollaborators.query(sql, (err: any, data: any) => {
@@ -62,6 +64,7 @@ app.get("/collaborators", async (req: any, res: any) => {
   });
 });
 
+// Get Updates from data table with admin
 app.get("/admin/updates", async (req: any, res: any) => {
   const sql = "SELECT * FROM updates";
   dbAdminUpdates.query(sql, (err: any, data: any) => {
@@ -70,6 +73,7 @@ app.get("/admin/updates", async (req: any, res: any) => {
   });
 });
 
+// Get Collaborators from data table with admin
 app.get("/admin/collaborators", async (req: any, res: any) => {
   const sql = "SELECT * FROM collaborators";
   dbAdminCollaborators.query(sql, (err: any, data: any) => {
@@ -78,6 +82,7 @@ app.get("/admin/collaborators", async (req: any, res: any) => {
   });
 });
 
+// Post Update from data table with admin
 app.post("/admin/updates/post", cors(), async (req: any, res: any) => {
   const newData = req.body;
   console.log(newData);
@@ -107,6 +112,7 @@ app.post("/admin/updates/post", cors(), async (req: any, res: any) => {
   });
 });
 
+// Post Collaborator from data table with admin
 app.post("/admin/collaborators/post", cors(), async (req: any, res: any) => {
   const newData = req.body;
   if (!newData.banner || !newData.title) {
@@ -128,9 +134,9 @@ app.post("/admin/collaborators/post", cors(), async (req: any, res: any) => {
   });
 });
 
+// Delete Update from data table with admin
 app.delete("/admin/updates/delete", cors(), async (req: any, res: any) => {
   const { id } = req.body;
-  console.log(id);
 
   if (!id) {
     return res.status(400).json({ message: "Missing required field: id" });
@@ -146,6 +152,30 @@ app.delete("/admin/updates/delete", cors(), async (req: any, res: any) => {
   }
 });
 
-app.listen(process.env.PORT || 8081, () => {
+// Delete Collaborator from data table with admin
+app.delete(
+  "/admin/collaborators/delete",
+  cors(),
+  async (req: any, res: any) => {
+    const { id } = req.body;
+
+    if (!id) {
+      return res.status(400).json({ message: "Missing required field: id" });
+    }
+
+    try {
+      const sql = `DELETE from collaborators WHERE id = ?`;
+      await dbAdminCollaborators.query(sql, [id]);
+      res.json({ message: "Collaborator deleted successfully" });
+    } catch (err) {
+      console.error(err);
+      res
+        .status(500)
+        .json({ message: "Error deleting collaborator from data" });
+    }
+  }
+);
+
+app.listen(process.env.PORT, () => {
   console.log("listening");
 });
