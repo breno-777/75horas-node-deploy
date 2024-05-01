@@ -125,10 +125,11 @@ app.post("/admin/collaborators/post", cors(), async (req: any, res: any) => {
   const values = [
     newData.banner,
     newData.title,
+    newData.url,
     newData.participating || false,
   ];
 
-  const sql = `INSERT INTO collaborators(banner, title, participating) VALUES (?, ?, ?)`;
+  const sql = `INSERT INTO collaborators(banner, title, participating, url) VALUES (?, ?, ?, ?)`;
   dbAdminCollaborators.query(sql, values, (err: any) => {
     if (err) {
       console.error(err);
