@@ -1,10 +1,12 @@
 const express = require("express");
 const mysql = require("mysql");
 const cors = require("cors");
+const compression = require("compression");
 const bodyParser = require("body-parser");
 
 const app = express();
 
+app.use(compression());
 app.use(bodyParser.json({ limit: "6mb" }));
 app.use(bodyParser.urlencoded({ limit: "6mb", extended: true }));
 app.use(express.json());
