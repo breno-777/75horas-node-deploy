@@ -4,6 +4,9 @@ const cors = require("cors");
 const compression = require("compression");
 const bodyParser = require("body-parser");
 
+// const ejs = require("ejs");
+// const nodemailer = require("nodemailer");
+
 const app = express();
 
 app.use(compression());
@@ -182,6 +185,75 @@ app.delete(
   }
 );
 
-app.listen(process.env.PORT, () => {
+app.listen(process.env.PORT || 8081, () => {
   console.log("listening");
 });
+
+// const transporter = nodemailer.createTransport({
+//   host: process.env.MAIL_HOST,
+//   port: process.env.MAIL_PORT,
+//   secure: true,
+//   auth: {
+//     user: process.env.MAIL_USER,
+//     pass: process.env.MAIL_PASSWORD,
+//   },
+// });
+
+// const transporter = nodemailer.createTransport({
+//   host: "mail.75horas.com",
+//   port: 587,
+//   secure: true,
+//   auth: {
+//     user: "support@75horas.com",
+//     pass: process.env.MAIL_PASSWORD,
+//   },
+// });
+
+// Send email
+// app.post("/send-email", cors(), async (req: any, res: any) => {
+//   const { name, email, subject, message, type } = req.body;
+
+//   try {
+//     await transporter.sendMail({
+//       from: `${email}`,
+//       to: `support@75horas.com`,
+//       subject: `${type}: ${subject}`,
+//       html: `
+//       <p>Name: ${name} </p>
+//       <p>Email: ${email} </p>
+//       <p>Message: ${message} </p>
+//       `,
+//     });
+//     res.status(200).send({ message: "Email send successfully" });
+//   } catch (error) {
+//     res.status(500).send({ message: "Error sending mail" });
+//   }
+// });
+
+// const dbGuestUpdates = mysql.createConnection({
+//   host: "ns96.hostgator.com.br",
+//   user: "hg75ho41_guest",
+//   password: "sIqN27=L@eNq",
+//   database: "hg75ho41_updates",
+// });
+
+// const dbGuestCollaborators = mysql.createConnection({
+//   host: "ns96.hostgator.com.br",
+//   user: "hg75ho41_guest",
+//   password: "sIqN27=L@eNq",
+//   database: "hg75ho41_collaborators",
+// });
+
+// const dbAdminUpdates = mysql.createConnection({
+//   host: "ns96.hostgator.com.br",
+//   user: "hg75ho41_admin",
+//   password: "*t?çD[7?}1a#",
+//   database: "hg75ho41_updates",
+// });
+
+// const dbAdminCollaborators = mysql.createConnection({
+//   host: "ns96.hostgator.com.br",
+//   user: "hg75ho41_admin",
+//   password: "*t?çD[7?}1a#",
+//   database: "hg75ho41_collaborators",
+// });
